@@ -24,25 +24,41 @@ Methods
 ### bag( [bag, jQuery, html]  )
 
 ```javascript
-var myBag = bag( $('#my-item') );
+var myBag = bag( $('#my-items-container') );
 ```
 
 takes in the input and returns a bag element
 
+### options( option, value ), options( obj )
+```javascript
+bag().options('itemSelector', '.slot')  // set the jQuery selector for a single item
+     .options({
+        'fieldSelector': '.field',      // set the jQuery selector for an item's field
+        'labelSelector': '.label',      // set the jQuery selector for a field's label
+        'contentSelector': '.content'   // set the jQuery selector for a field's content
+     }); 
+```
+
+
+
 ### .fields( selector )
 
 ```javascript
-var myFields = bag( $('#my-item') ).fields(); // array
-var myField  = bag( $('#my-item') ).fields( 'customProperty' ); // string
+var myFields  = bag( $('#my-items-container') ).fields(); // object
+var myFields2 = bag( $('#my-items-container') ).fields( 'customProperty' ); // array
+
+var myField   = bag( $('#my-items-container') ).first().fields(); // object
+var myField2  = bag( $('#my-items-container') ).first().fields( 'customProperty' ); // string
+
 ```
 
-gets array of value from every item in the bag *(for a single item, a string is returned)*
+gets field values from every item in the bag
 
 ### .fields( selector, value ), .fields( obj )
 
 ```javascript
-var myBag  =  bag( $('#my-item') ).fields( 'customProperty', true );
-var myBag2 =  bag( $('#my-item') ).fields({
+var myBag  =  bag( $('#my-items-container') ).fields( 'customProperty', true );
+var myBag2 =  bag( $('#my-items-container') ).fields({
   'customProperty'  : true,
   'myOtherProperty' : false
 });
@@ -53,14 +69,15 @@ sets values to every item in the bag
 ### .first(  )
 
 ```javascript
-var myItem = bag( $('#my-item') ).first();
+var myItem = bag( $('#my-items-container') ).first();
 ```
 
 returns a bag containing the first element
 
 ### .each( function( index ) )
+
 ```javascript
-var myBag =  bag( $('#my-item') ).each( function(i) {
+var myBag =  bag( $('#my-items-container') ).each( function(i) {
   this.fields('myItemIndex', i);
 });
 ```
