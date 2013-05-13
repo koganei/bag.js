@@ -23,7 +23,7 @@
 
 			/**
 			 * A central reference to the root bag (document)
-			 * Like... window.rootbag will be used to point to an empty rootSlotFactory, or the "originator" of all future slotFactories.
+			 * Like... window.rootbag will be used to point to an empty rootitemFactory, or the "originator" of all future itemFactories.
 			 */
 			rootbag,
 
@@ -32,6 +32,14 @@
 			 */
 			_bag = window.bag,
 			_b = window.b,
+
+			// global options for bag
+			_options = {
+				itemSelector : ".slot", // you can change it whatever
+				fieldSelector: '.views-field',
+				labelSelector: '.views-label',
+				contentSelector: '.field-content',
+			}, 
 
 			/**
 			 * some core properties and methods
@@ -45,16 +53,10 @@
 			rquickExpr = /^(?:\s*(<[\w\W]+>)[^>]*|#([\w-]*))$/,
 
 			/**
-			 * An empty slot item
+			 * The template for the item
 			 */
-			_slot = {
+			_item = {
 				id 			: 0,
-				name 		: '',
-				quantity	: 0,
-				level 		: 0,
-				quickslot	: 0,
-				owner 		: 0,
-				type		: 0,
 				_fields		: {} // namespaced into a private place so that field() can be used to get/set
 			},
 
@@ -81,36 +83,36 @@
 				}
 
 				// Handle HTML strings
-				$slots = $(selector).find('.slot');
-				$slots = $slots.length ? $slots : $(selector).filter('.slot');
+				$items = $(selector).find(_options['itemSelector']);
+				$items = $items.length ? $items : $(selector).filter(_options['itemSelector']);
 				
-				if( $slots.length ) {
+				if( $items.length ) {
 
 					var _this = this;
 
-					$slots.each( function(i) {
-						// make into slots
-						var newSlot = _this.htmlToSlots(this);
-						// bnewSlot = $.merge([], [_slot]);
-						$.merge(_this, [newSlot])
+					$items.each( function(i) {
+						// make into items
+						var newitem = _this.import(this);
+						// bnewitem = $.merge([], [_item]);
+						$.merge(_this, [newitem])
 					});
 
 					return this;
 					
 				}
 
-				// Handle single slot
-				if( this.compare(selector, _slot) ) {
-					// add the slot to the bag object
+				// Handle single item
+				if( this.compare(selector, _item) ) {
+					// add the item to the bag object
 					this.push(selector);
 					//this.length++;
 					return this;
 				}
 
-				// Handle array of slots
+				// Handle array of items
 				if( selector instanceof Array ) {
 					for (var i = selector.length - 1; i >= 0; i--) {
-						if( this.compare(selector[i], _slot) ) {
+						if( this.compare(selector[i], _item) ) {
 							this.push(selector[i]);
 							//this.length++;
 						}
@@ -143,6 +145,29 @@
 				return [].slice.call( this );
 			},
 
+			options: function( options, value ) {
+				// handle .options({ test: 'test' })
+				if( options instanceof Object ) {
+					for(var index in options) {
+						_options[index] = options[index];
+					}
+
+					return this;
+				}
+
+				// handle .options('test')
+				if( typeof options == "string" ) {
+					// handle .options('test', 4)
+					if( value ) {
+						_options[options] = value;
+						return this;
+					}
+
+					return _options[options];
+				}
+
+			},
+
 			// Get the Nth element in the matched element set OR
 			// Get the whole matched element set as a clean array
 			get: function( num ) {
@@ -172,26 +197,26 @@
 				}
 			},
 
-			htmlToSlots: function( html ) {
-				// get all the html fields of the slot
-				var $fields	= $(html).find('.views-field');
+			import: function( html ) {
+				// get all the html fields of the item
+				var $fields	= $(html).find(_options['fieldSelector']);
 
 				// a holder to put 'field-title':'field-content' in to sanitize later
 				var temporaryFields = {};
 
 				// we get the content
 				$fields.each( function(i) {
-					var label	= $(this).find('.views-label').text(),
-						content = $(this).find('.field-content').text();
+					var label	= $(this).find(_options['labelSelector']).text(),
+						content = $(this).find(_options['contentSelector']).text();
 
 					label = label || i;
 					temporaryFields[label] = content;
 				} );
 
-				newSlot = $.extend({}, _slot);
-				newSlot._fields = temporaryFields;
+				newitem = $.extend({}, _item);
+				newitem._fields = temporaryFields;
 
-				return newSlot;
+				return newitem;
 			},
 
 			fields: function( selector, value ) {
@@ -204,28 +229,28 @@
 				if( selector && value ) {
 						// set
 						for (var i = this.length - 1; i >= 0; i--) {
-							slot = this[i];
-							slot._fields[selector] = value;
+							item = this[i];
+							item._fields[selector] = value;
 						}
 
 						return this;
 				}
 
-				// Handle bag($slots).fields( selector ) or bag ($slots).fields()
+				// Handle bag($items).fields( selector ) or bag ($items).fields()
 				for ( var i = this.length - 1; i >= 0; i-- ) {
-					currentSlot = this[i];
+					currentitem = this[i];
 					returnArray[i] = [];
 
 					// Handle .fields( selector )
 					if( selector ) {
-						if(this.length == 1) { return currentSlot._fields[selector]; }
-						returnArray[i] = currentSlot._fields[selector];
+						if(this.length == 1) { return currentitem._fields[selector]; }
+						returnArray[i] = currentitem._fields[selector];
 
 					// Handle .fields()
 					} else {
-						if(this.length == 1) { return currentSlot._fields; }
-						for( var j in currentSlot._fields) {
-							currentField = currentSlot._fields[j];
+						if(this.length == 1) { return currentitem._fields; }
+						for( var j in currentitem._fields) {
+							currentField = currentitem._fields[j];
 							returnArray[i][j] = currentField;	
 						}
 					}
@@ -241,10 +266,10 @@
 
 			each: function( fn ) {
 				for (var i = 0; i < this.length; i++) {
-					var slot = this[i];
+					var item = this[i];
 
 					if($.isFunction(fn)) {
-						fn.call(bag(slot), i);
+						fn.call(bag(item), i);
 					}
 
 				}
@@ -257,9 +282,11 @@
 		bag.fn.init.prototype = bag.fn;
 
 		// All jQuery objects should point back to these
-		// rootbag = bag(document);
+		rootbag = bag(document);
 
 		window.bag = window.b = bag;
+
+
 
 
 

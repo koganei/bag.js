@@ -1,6 +1,12 @@
 $(function() {
-                
+    
+    /**
+     *
+     * 
+     * 
+     */
     var $slots = $('.slot');
+
 
     test( "bag(jQuery) - one", function() {
       mybag = bag($slots.first());
@@ -52,7 +58,7 @@ $(function() {
     test( "bag(jQuery).first()", function() {
       var testbags = bag($slots);
       var myBag = testbags.first();
-      
+
       ok( myBag.length == 1, "Length of bag is 1");
     });
 
@@ -65,6 +71,14 @@ $(function() {
         ok( myField instanceof Object, "myField is an object of fields: " + Object.keys(myField) );
 
       });
+
+    });
+
+    test( "bag().options('test', '2')", function() {
+        var myBag = bag().options('test', '2');
+        var myBag2 = bag().options('test', '4');
+
+        ok( myBag.options('test') == 4, "Global options for 'test' have changed from 2 to ", myBag.options('test') )
 
     });
 
