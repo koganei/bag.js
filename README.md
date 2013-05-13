@@ -23,19 +23,46 @@ Methods
 
 ### bag( [bag, jQuery, html]  )
 
+```javascript
+var myBag = bag( $('#my-item') );
+```
+
 takes in the input and returns a bag element
 
 ### .fields( selector )
+
+```javascript
+var myFields = bag( $('#my-item') ).fields(); // array
+var myField = bag( $('#my-item') ).fields( 'customProperty' ); // string
+```
+
 gets array of value from every item in the bag *(for a single item, a string is returned)*
 
 ### .fields( selector, value ), .fields( obj )
+
+```javascript
+var myBag  =  bag( $('#my-item') ).fields( 'customProperty', true );
+var myBag2 =  bag( $('#my-item') ).fields({
+  'customProperty'  : true,
+  'myOtherProperty' : false
+});
+```
 
 sets values to every item in the bag
 
 ### .first(  )
 
+```javascript
+var myItem = bag( $('#my-item') ).first();
+```
+
 returns a bag containing the first element
 
 ### .each( function( index ) )
+```javascript
+var myBag =  bag( $('#my-item') ).each( function(i) {
+  this.fields('myItemIndex', i);
+});
+```
 
 calls the given function on every item in the bag, `this` is a bag containing the item
