@@ -12,9 +12,10 @@ Modular, Chainable
 Modeled after jQuery, it allows for any collection of object to be used in the same way.
 We try to keep the format of the bag element simple.
 
-It has two properties:
-- *id*: a unique id to represent the object.
-- *_fields*: an object containing your object's properties. (accessible through fields())
+Every item in a bag has two properties:
+- *id*: a unique id to represent the item.
+- *_fields*: an object containing your item's properties. (accessible through fields())
+
 
 
 Methods
@@ -30,3 +31,11 @@ gets array of value from every item in the bag *(for a single item, a string is 
 ### .fields( selector, value ), .fields( obj )
 
 sets values to every item in the bag
+
+### .first(  )
+
+returns a bag containing the first element
+
+### .each( function( index ) )
+
+calls the given function on every item in the bag, *this* is a bag containing the item
