@@ -33,7 +33,7 @@ takes in the input and returns a bag element
 
 ```javascript
 var myFields = bag( $('#my-item') ).fields(); // array
-var myField = bag( $('#my-item') ).fields( 'customProperty' ); // string
+var myField  = bag( $('#my-item') ).fields( 'customProperty' ); // string
 ```
 
 gets array of value from every item in the bag *(for a single item, a string is returned)*
