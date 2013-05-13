@@ -13,8 +13,8 @@ Modeled after jQuery, it allows for any collection of object to be used in the s
 We try to keep the format of the bag element simple.
 
 Every item in a bag has two properties:
-- *id*: a unique id to represent the item.
-- *_fields*: an object containing your item's properties. (accessible through fields())
+- `id`: a unique id to represent the item.
+- `_fields`: an object containing your item's properties. (accessible through fields())
 
 
 
@@ -38,4 +38,4 @@ returns a bag containing the first element
 
 ### .each( function( index ) )
 
-calls the given function on every item in the bag, *this* is a bag containing the item
+calls the given function on every item in the bag, `this` is a bag containing the item
