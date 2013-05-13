@@ -39,7 +39,7 @@ bag().options('itemSelector', '.slot')  // set the jQuery selector for a single 
      }); 
 ```
 
-
+Sets global options for all bags in the page. It is recommended to only set this up once on page load before first bag call.
 
 ### .fields( selector )
 
