@@ -83,3 +83,22 @@ var myBag =  bag( $('#my-items-container') ).each( function(i) {
 ```
 
 calls the given function on every item in the bag, `this` is a bag containing the item
+
+### .where( filterObj )
+
+```javascript
+var myBag =  bag( $('#my-items-container') ).where( {
+     myField: 2 // will check in every item if myField == 2
+} );
+```
+
+returns a bag filtered by the where argument
+
+### .average( ), .average( fieldName )
+
+```javascript
+var average =  bag( $('#my-items-container') ).average( 'myField' ); // returns an object
+```
+
+
+returns an object containing the average of every field which contained numbers
