@@ -82,5 +82,34 @@ $(function() {
 
     });
 
+    test( "bag(jQuery).where({'Caffeine': '50 mg'})", function() {
+        var myBag = bag($slots);
+        var myBag2 = myBag.fields('Caffeine', '50 mg').each(function(i) {
+
+          if( i % 2 ) {
+            this.fields('Caffeine', '3 mg');
+          }
+
+        }).where({'Caffeine': '50 mg'});
+        
+
+        ok( myBag.length == ( myBag2.length * 2 ), "Found all fields where Caffeine is 50mg. myBag: " + myBag.length + ", myBag2: " + myBag2.length );
+
+    });
+
+    test( "bag(jQuery).average()", function() {
+        var myBag = bag($slots);
+        var myAverage = myBag.average();
+
+        ok( $.isNumeric(myAverage['protein']), "Protein averaged to ", myAverage['protein'] );
+    });
+
+    test( "bag(jQuery).average('protein')", function() {
+        var myBag = bag($slots);
+        var myAverage = myBag.average('protein');
+
+        ok( $.isNumeric(myAverage['protein']), "Protein averaged to ", myAverage['protein'] );
+    });
+
     
 });

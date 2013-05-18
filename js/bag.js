@@ -11,10 +11,6 @@
  * 
  */
 
-// JavaScript should be made compatible with libraries other than jQuery by
-// wrapping it with an "anonymous closure". See:
-// - http://drupal.org/node/1446420
-// - http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth
 (function ($, Drupal, window, document, undefined) {
 
 
@@ -57,7 +53,7 @@
 			 */
 			_item = {
 				id 			: 0,
-				_fields		: {} // namespaced into a private place so that field() can be used to get/set
+				_fields		: {} // underscore-spaced fields() can be used to get/set
 			},
 
 			/**
@@ -275,8 +271,79 @@
 				}
 
 				return this;
+			},
+
+			add: function( items ) {
+				if(item.bag) {
+					var newItems = [].splice.call(item, 0);
+
+					this.push(newItems);
+				}
+
+				return this;
+			},
+
+			where: function ( filter ) {
+				var returnArray = [];
+
+				for ( var i = this.length - 1 ; i >= 0 ; i-- ) {
+					var item 		= this[i],
+						thisItem	= false;
+					
+					for( var f in filter ) {
+						
+						if( item._fields[f] == filter[f] ) {
+							thisItem = true;
+						}
+					}
+
+					if(thisItem) {
+						returnArray.push(item);
+					}
+
+				};
+
+				return bag(returnArray);
+			},
+
+			average: function( fieldName ) {
+				var averages = {};
+				
+				for (var i = this.length - 1; i >= 0; i--) {
+					var item = this[i];
+
+					for( var f in item._fields ) {
+						var numb = item._fields[f].match(/[0-9]+/);
+							
+						if(numb instanceof Array) {
+							numb = numb.join("");
+						}
+
+						if(fieldName) {
+							if($.isNumeric(numb) && fieldName == f) {
+								if(!averages[f]) { averages[f] = 0; }
+								averages[f] += parseInt(numb, 10);
+							}
+						} else {
+							if($.isNumeric(numb)) {
+								if(!averages[f]) { averages[f] = 0; }
+								averages[f] += parseInt(numb, 10);
+							}
+						}
+					}
+
+					
+				}
+
+				for( var a in averages ) {
+					averages[a] = averages[a] / this.length;
+				}
+
+				return averages;
 			}
 		};
+
+
 
 		// Give the init function the jQuery prototype for later instantiation
 		bag.fn.init.prototype = bag.fn;
