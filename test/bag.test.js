@@ -100,15 +100,15 @@ $(function() {
     test( "bag(jQuery).average()", function() {
         var myBag = bag($slots);
         var myAverage = myBag.average();
-
-        ok( $.isNumeric(myAverage['protein']), "Protein averaged to ", myAverage['protein'] );
+        
+        ok( $.isNumeric(myAverage['protein'] ), "Protein averaged to ", myAverage['protein'] );
     });
 
     test( "bag(jQuery).average('protein')", function() {
         var myBag = bag($slots);
         var myAverage = myBag.average('protein');
-
-        ok( $.isNumeric(myAverage['protein']), "Protein averaged to ", myAverage['protein'] );
+        
+        ok( $.isNumeric(myAverage['protein'] ), "Protein averaged to ", myAverage['protein'] );
     });
 
     
